@@ -87,7 +87,6 @@ async function removeInlineScripts(directory, log) {
     cwd: directory,
     dot: true,
     absolute: true,
-    absolute: true,
     filesOnly: true,
   })
 
