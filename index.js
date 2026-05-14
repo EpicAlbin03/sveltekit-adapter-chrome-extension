@@ -4,6 +4,7 @@ import {
   createReadStream,
   createWriteStream,
   existsSync,
+  mkdirSync,
   readFileSync,
   statSync,
   unlinkSync,
@@ -14,7 +15,6 @@ import { pipeline } from "stream";
 import glob from "tiny-glob";
 import { promisify } from "util";
 import zlib from "zlib";
-import { mkdirSync } from "fs";
 
 const pipe = promisify(pipeline);
 
