@@ -8,9 +8,9 @@ import {
   readFileSync,
   statSync,
   unlinkSync,
-  writeFileSync
+  writeFileSync,
 } from "fs";
-import { join, dirname } from "path";
+import { dirname, join } from "path";
 import { pipeline } from "stream";
 import glob from "tiny-glob";
 import { promisify } from "util";
@@ -38,7 +38,7 @@ export default function(options) {
 
       // operation required since generated app manifest will overwrite the static extension manifest.json
       reWriteExtensionManifest(assets, manifest, builder);
-    }
+    },
   };
 }
 
@@ -65,7 +65,7 @@ async function removeAppManifest(directory, appDir, log) {
     cwd: directory,
     dot: true,
     absolute: true,
-    filesOnly: true
+    filesOnly: true,
   });
 
   files.forEach((path) => {
@@ -87,7 +87,7 @@ async function removeInlineScripts(directory, log) {
     cwd: directory,
     dot: true,
     absolute: true,
-    filesOnly: true
+    filesOnly: true,
   });
 
   for (const file of files) {
@@ -175,11 +175,13 @@ async function compress(directory) {
     cwd: directory,
     dot: true,
     absolute: true,
-    filesOnly: true
+    filesOnly: true,
   });
 
   await Promise.all(
-    files.map((file) => Promise.all([compress_file(file, "gz"), compress_file(file, "br")]))
+    files.map((file) =>
+      Promise.all([compress_file(file, "gz"), compress_file(file, "br")])
+    )
   );
 }
 
@@ -191,12 +193,13 @@ async function compress_file(file, format = "gz") {
   const compress =
     format == "br"
       ? zlib.createBrotliCompress({
-          params: {
-            [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-            [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
-            [zlib.constants.BROTLI_PARAM_SIZE_HINT]: statSync(file).size
-          }
-        })
+        params: {
+          [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+          [zlib.constants.BROTLI_PARAM_QUALITY]:
+            zlib.constants.BROTLI_MAX_QUALITY,
+          [zlib.constants.BROTLI_PARAM_SIZE_HINT]: statSync(file).size,
+        },
+      })
       : zlib.createGzip({ level: zlib.constants.Z_BEST_COMPRESSION });
 
   const source = createReadStream(file);
